@@ -5,7 +5,7 @@ Abstract:
 Defines the app's knowledge of the model's class labels.
 */
 
-extension HandActionModel {
+extension HandWaveActionModel {
     /// Represents the app's knowledge of the Exercise Classifier model's labels.
     enum Label: String, CaseIterable {
         case handwave = "handwave"

@@ -120,7 +120,9 @@ class VideoCapture: NSObject {
     }
 
     private func enableCaptureSession() {
-        if !captureSession.isRunning { captureSession.startRunning() }
+        if !captureSession.isRunning {
+            captureSession.startRunning()
+        }
     }
 
     private func disableCaptureSession() {
@@ -184,7 +186,7 @@ extension VideoCapture {
         defer { captureSession.commitConfiguration() }
 
         // Set the video camera to run at the action classifier's frame rate.
-        let modelFrameRate = HandActionModel.frameRate
+        let modelFrameRate = HandWaveActionModel.frameRate
 
         let input = AVCaptureDeviceInput.createCameraInput(position: cameraPosition,
                                                            frameRate: modelFrameRate)

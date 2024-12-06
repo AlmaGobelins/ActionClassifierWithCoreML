@@ -5,7 +5,7 @@ Abstract:
 Adds a runtime check to see if the app's knowledge matches the model's labels.
 */
 
-extension HandActionModel {
+extension HandWaveActionModel {
     /// Ensures the apps knows all of the model's labels at runtime.
     func checkLabels() {
         let metadata = model.modelDescription.metadata

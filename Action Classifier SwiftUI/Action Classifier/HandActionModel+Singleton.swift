@@ -9,14 +9,14 @@ Creates a common instance of the Exercise Classifier.
 
 import CoreML
 
-extension HandActionModel {
+extension HandWaveActionModel {
     /// Creates a shared Exercise Classifier instance for the app at launch.
-    static let shared: HandActionModel = {
+    static let shared: HandWaveActionModel = {
         // Use a default model configuration.
         let defaultConfig = MLModelConfiguration()
 
         // Create an Exercise Classifier instance.
-        guard let handClassifier = try? HandActionModel(configuration: defaultConfig) else {
+        guard let handClassifier = try? HandWaveActionModel(configuration: defaultConfig) else {
             // The app requires the action classifier to function.
             fatalError("Exercise Classifier failed to initialize.")
         }

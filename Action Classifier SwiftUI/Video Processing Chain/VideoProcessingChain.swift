@@ -62,7 +62,7 @@ struct VideoProcessingChain {
     private let humanBodyPoseRequest = VNDetectHumanBodyPoseRequest()
 
     /// The action classifier that recognizes exercise activities.
-    private let actionClassifier = HandActionModel.shared
+    private let actionClassifier = HandWaveActionModel.shared
 
     /// The number of pose data instances the action classifier needs
     /// to make a prediction.

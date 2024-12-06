@@ -17,7 +17,6 @@
 		992BE96129B13A2A006157E3 /* AVCaptureDevice+FrameRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE95D29B13A2A006157E3 /* AVCaptureDevice+FrameRate.swift */; };
 		992BE96229B13A2A006157E3 /* AVCaptureVideoDataOutput+PixelFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE95E29B13A2A006157E3 /* AVCaptureVideoDataOutput+PixelFormat.swift */; };
 		992BE96529B13AE9006157E3 /* PredictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE96429B13AE9006157E3 /* PredictionViewModel.swift */; };
-		992BE96729B13B9A006157E3 /* ExerciseClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 992BE96629B13B9A006157E3 /* ExerciseClassifier.mlmodel */; };
 		992BE96D29B13BBB006157E3 /* Pose+Landmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE96929B13BBB006157E3 /* Pose+Landmark.swift */; };
 		992BE96E29B13BBB006157E3 /* Pose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE96A29B13BBB006157E3 /* Pose.swift */; };
 		992BE96F29B13BBB006157E3 /* Pose+Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE96B29B13BBB006157E3 /* Pose+Connection.swift */; };
@@ -28,8 +27,11 @@
 		992BE97C29B13C32006157E3 /* HandActionModel +Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE97529B13C32006157E3 /* HandActionModel +Label.swift */; };
 		992BE97D29B13C32006157E3 /* HandActionModel +PredictAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE97629B13C32006157E3 /* HandActionModel +PredictAction.swift */; };
 		992BE97E29B13C32006157E3 /* HandActionModel+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE97729B13C32006157E3 /* HandActionModel+Singleton.swift */; };
-		AD2871932CF611350007D32D /* HandGestureModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = AD2871922CF611350007D32D /* HandGestureModel.mlmodel */; };
-		AD28719A2CF67B080007D32D /* HandActionModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = AD2871992CF67B080007D32D /* HandActionModel.mlmodel */; };
+		AD1B64502CF9124300F11F30 /* WebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B644F2CF9124300F11F30 /* WebSocketClient.swift */; };
+		AD1B64532CF9127800F11F30 /* NWWebSocket in Frameworks */ = {isa = PBXBuildFile; productRef = AD1B64522CF9127800F11F30 /* NWWebSocket */; };
+		AD805EF72D01D75600F512D2 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805EF42D01D75600F512D2 /* PlayerViewController.swift */; };
+		AD805EF82D01D75600F512D2 /* SingleVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805EF52D01D75600F512D2 /* SingleVideoPlayer.swift */; };
+		AD805F9B2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805F9A2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,7 +46,6 @@
 		992BE95D29B13A2A006157E3 /* AVCaptureDevice+FrameRate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+FrameRate.swift"; sourceTree = "<group>"; };
 		992BE95E29B13A2A006157E3 /* AVCaptureVideoDataOutput+PixelFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVCaptureVideoDataOutput+PixelFormat.swift"; sourceTree = "<group>"; };
 		992BE96429B13AE9006157E3 /* PredictionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionViewModel.swift; sourceTree = "<group>"; };
-		992BE96629B13B9A006157E3 /* ExerciseClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ExerciseClassifier.mlmodel; sourceTree = "<group>"; };
 		992BE96929B13BBB006157E3 /* Pose+Landmark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pose+Landmark.swift"; sourceTree = "<group>"; };
 		992BE96A29B13BBB006157E3 /* Pose.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pose.swift; sourceTree = "<group>"; };
 		992BE96B29B13BBB006157E3 /* Pose+Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pose+Connection.swift"; sourceTree = "<group>"; };
@@ -55,12 +56,18 @@
 		992BE97529B13C32006157E3 /* HandActionModel +Label.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HandActionModel +Label.swift"; sourceTree = "<group>"; };
 		992BE97629B13C32006157E3 /* HandActionModel +PredictAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HandActionModel +PredictAction.swift"; sourceTree = "<group>"; };
 		992BE97729B13C32006157E3 /* HandActionModel+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HandActionModel+Singleton.swift"; sourceTree = "<group>"; };
-		AD2871922CF611350007D32D /* HandGestureModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandGestureModel.mlmodel; sourceTree = "<group>"; };
-		AD2871992CF67B080007D32D /* HandActionModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandActionModel.mlmodel; sourceTree = "<group>"; };
+		AD1B644F2CF9124300F11F30 /* WebSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketClient.swift; sourceTree = "<group>"; };
+		AD805EF42D01D75600F512D2 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		AD805EF52D01D75600F512D2 /* SingleVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleVideoPlayer.swift; sourceTree = "<group>"; };
+		AD805F9A2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageRecognitionManager 2.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AD2871A32CF74BEB0007D32D /* Video */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Video; sourceTree = "<group>"; };
+		AD1B63B92CF8FF5300F11F30 /* SpheroSDK */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SpheroSDK; sourceTree = "<group>"; };
+		AD805EFC2D01DEDF00F512D2 /* files */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = files; sourceTree = "<group>"; };
+		AD805F2A2D01EB2B00F512D2 /* Extensions */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Extensions; sourceTree = "<group>"; };
+		AD805F2D2D01EB3700F512D2 /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
+		AD805F962D01F30600F512D2 /* ImagePredictor 2 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "ImagePredictor 2"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD1B64532CF9127800F11F30 /* NWWebSocket in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,11 +101,14 @@
 		992BE94729B138F6006157E3 /* Action Classifier SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				AD2871A32CF74BEB0007D32D /* Video */,
+				AD805F9A2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift */,
+				AD805F962D01F30600F512D2 /* ImagePredictor 2 */,
+				AD805F2D2D01EB3700F512D2 /* Models */,
+				AD805F2A2D01EB2B00F512D2 /* Extensions */,
+				AD1B644F2CF9124300F11F30 /* WebSocketClient.swift */,
+				AD1B63B92CF8FF5300F11F30 /* SpheroSDK */,
 				992BE94829B138F6006157E3 /* Action_Classifier_SwiftUIApp.swift */,
-				AD2871992CF67B080007D32D /* HandActionModel.mlmodel */,
-				AD2871922CF611350007D32D /* HandGestureModel.mlmodel */,
-				992BE96629B13B9A006157E3 /* ExerciseClassifier.mlmodel */,
+				AD805EF62D01D75600F512D2 /* VideoPlayer */,
 				992BE95929B13A10006157E3 /* Views */,
 				992BE96329B13AD0006157E3 /* ViewModel */,
 				992BE96829B13BBB006157E3 /* Pose */,
@@ -177,6 +188,16 @@
 			path = "Action Classifier";
 			sourceTree = "<group>";
 		};
+		AD805EF62D01D75600F512D2 /* VideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				AD805EFC2D01DEDF00F512D2 /* files */,
+				AD805EF42D01D75600F512D2 /* PlayerViewController.swift */,
+				AD805EF52D01D75600F512D2 /* SingleVideoPlayer.swift */,
+			);
+			path = VideoPlayer;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -193,7 +214,11 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				AD2871A32CF74BEB0007D32D /* Video */,
+				AD1B63B92CF8FF5300F11F30 /* SpheroSDK */,
+				AD805EFC2D01DEDF00F512D2 /* files */,
+				AD805F2A2D01EB2B00F512D2 /* Extensions */,
+				AD805F2D2D01EB3700F512D2 /* Models */,
+				AD805F962D01F30600F512D2 /* ImagePredictor 2 */,
 			);
 			name = "Action Classifier SwiftUI";
 			productName = "Action Classifier SwiftUI";
@@ -224,6 +249,9 @@
 				Base,
 			);
 			mainGroup = 992BE93C29B138F6006157E3;
+			packageReferences = (
+				AD1B64512CF9127800F11F30 /* XCRemoteSwiftPackageReference "NWWebSocket" */,
+			);
 			productRefGroup = 992BE94629B138F6006157E3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -251,23 +279,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				992BE97B29B13C32006157E3 /* ActionPrediction.swift in Sources */,
+				AD805F9B2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift in Sources */,
 				992BE97929B13C32006157E3 /* HandActionModel +FrameRate.swift in Sources */,
 				992BE95F29B13A2A006157E3 /* VideoCapture.swift in Sources */,
 				992BE96529B13AE9006157E3 /* PredictionViewModel.swift in Sources */,
 				992BE96029B13A2A006157E3 /* AVCaptureDeviceInput+Camera.swift in Sources */,
 				992BE94B29B138F6006157E3 /* ContentView.swift in Sources */,
 				992BE97E29B13C32006157E3 /* HandActionModel+Singleton.swift in Sources */,
+				AD805EF72D01D75600F512D2 /* PlayerViewController.swift in Sources */,
+				AD805EF82D01D75600F512D2 /* SingleVideoPlayer.swift in Sources */,
 				992BE97A29B13C32006157E3 /* HandActionModel +LabelCheck.swift in Sources */,
 				992BE97029B13BBB006157E3 /* Pose+Empty.swift in Sources */,
 				992BE95829B13A0B006157E3 /* VideoProcessingChain.swift in Sources */,
 				992BE94929B138F6006157E3 /* Action_Classifier_SwiftUIApp.swift in Sources */,
 				992BE96129B13A2A006157E3 /* AVCaptureDevice+FrameRate.swift in Sources */,
-				992BE96729B13B9A006157E3 /* ExerciseClassifier.mlmodel in Sources */,
 				992BE97D29B13C32006157E3 /* HandActionModel +PredictAction.swift in Sources */,
 				992BE96E29B13BBB006157E3 /* Pose.swift in Sources */,
-				AD2871932CF611350007D32D /* HandGestureModel.mlmodel in Sources */,
 				992BE96D29B13BBB006157E3 /* Pose+Landmark.swift in Sources */,
-				AD28719A2CF67B080007D32D /* HandActionModel.mlmodel in Sources */,
+				AD1B64502CF9124300F11F30 /* WebSocketClient.swift in Sources */,
 				992BE96F29B13BBB006157E3 /* Pose+Connection.swift in Sources */,
 				992BE97C29B13C32006157E3 /* HandActionModel +Label.swift in Sources */,
 				992BE96229B13A2A006157E3 /* AVCaptureVideoDataOutput+PixelFormat.swift in Sources */,
@@ -402,6 +431,7 @@
 				DEVELOPMENT_TEAM = TFJ3R473DK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Accepter le bluetooth";
 				INFOPLIST_KEY_NSCameraUsageDescription = "For detect your body position...";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -432,6 +462,7 @@
 				DEVELOPMENT_TEAM = TFJ3R473DK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Accepter le bluetooth";
 				INFOPLIST_KEY_NSCameraUsageDescription = "For detect your body position...";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -473,6 +504,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AD1B64512CF9127800F11F30 /* XCRemoteSwiftPackageReference "NWWebSocket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pusher/NWWebSocket";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AD1B64522CF9127800F11F30 /* NWWebSocket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD1B64512CF9127800F11F30 /* XCRemoteSwiftPackageReference "NWWebSocket" */;
+			productName = NWWebSocket;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 992BE93D29B138F6006157E3 /* Project object */;
 }
