@@ -19,9 +19,10 @@ class WebSocketClient: ObservableObject {
     static let shared:WebSocketClient = WebSocketClient()
     
     var routes = [String:NWWebSocket]()
-    var ipAdress: String = "192.168.0.132:8080"
+    //var ipAdress: String = "192.168.0.132:8080"
+    var ipAdress: String = "192.168.1.20:8080"
     @Published var receivedMessage: String = ""
-    @Published var step: Int = 1
+    @Published var step: Int = 0
     
     func connectTo(route:String) -> Bool {
         let socketURL = URL(string: "ws://\(ipAdress)/\(route)")

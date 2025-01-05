@@ -29,9 +29,10 @@
 		992BE97E29B13C32006157E3 /* HandActionModel+Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992BE97729B13C32006157E3 /* HandActionModel+Singleton.swift */; };
 		AD1B64502CF9124300F11F30 /* WebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1B644F2CF9124300F11F30 /* WebSocketClient.swift */; };
 		AD1B64532CF9127800F11F30 /* NWWebSocket in Frameworks */ = {isa = PBXBuildFile; productRef = AD1B64522CF9127800F11F30 /* NWWebSocket */; };
+		AD6579182D281B9300FE8A0E /* PanRecognitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6579172D281B9300FE8A0E /* PanRecognitionManager.swift */; };
 		AD805EF72D01D75600F512D2 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805EF42D01D75600F512D2 /* PlayerViewController.swift */; };
 		AD805EF82D01D75600F512D2 /* SingleVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805EF52D01D75600F512D2 /* SingleVideoPlayer.swift */; };
-		AD805F9B2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805F9A2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift */; };
+		AD805F9B2D01F3BA00F512D2 /* BottleRecognitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805F9A2D01F3BA00F512D2 /* BottleRecognitionManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,9 +58,10 @@
 		992BE97629B13C32006157E3 /* HandActionModel +PredictAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HandActionModel +PredictAction.swift"; sourceTree = "<group>"; };
 		992BE97729B13C32006157E3 /* HandActionModel+Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HandActionModel+Singleton.swift"; sourceTree = "<group>"; };
 		AD1B644F2CF9124300F11F30 /* WebSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketClient.swift; sourceTree = "<group>"; };
+		AD6579172D281B9300FE8A0E /* PanRecognitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanRecognitionManager.swift; sourceTree = "<group>"; };
 		AD805EF42D01D75600F512D2 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		AD805EF52D01D75600F512D2 /* SingleVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleVideoPlayer.swift; sourceTree = "<group>"; };
-		AD805F9A2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageRecognitionManager 2.swift"; sourceTree = "<group>"; };
+		AD805F9A2D01F3BA00F512D2 /* BottleRecognitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleRecognitionManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -101,7 +103,8 @@
 		992BE94729B138F6006157E3 /* Action Classifier SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				AD805F9A2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift */,
+				AD805F9A2D01F3BA00F512D2 /* BottleRecognitionManager.swift */,
+				AD6579172D281B9300FE8A0E /* PanRecognitionManager.swift */,
 				AD805F962D01F30600F512D2 /* ImagePredictor 2 */,
 				AD805F2D2D01EB3700F512D2 /* Models */,
 				AD805F2A2D01EB2B00F512D2 /* Extensions */,
@@ -279,7 +282,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				992BE97B29B13C32006157E3 /* ActionPrediction.swift in Sources */,
-				AD805F9B2D01F3BA00F512D2 /* ImageRecognitionManager 2.swift in Sources */,
+				AD6579182D281B9300FE8A0E /* PanRecognitionManager.swift in Sources */,
+				AD805F9B2D01F3BA00F512D2 /* BottleRecognitionManager.swift in Sources */,
 				992BE97929B13C32006157E3 /* HandActionModel +FrameRate.swift in Sources */,
 				992BE95F29B13A2A006157E3 /* VideoCapture.swift in Sources */,
 				992BE96529B13AE9006157E3 /* PredictionViewModel.swift in Sources */,
