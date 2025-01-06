@@ -33,6 +33,7 @@
 		AD805EF72D01D75600F512D2 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805EF42D01D75600F512D2 /* PlayerViewController.swift */; };
 		AD805EF82D01D75600F512D2 /* SingleVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805EF52D01D75600F512D2 /* SingleVideoPlayer.swift */; };
 		AD805F9B2D01F3BA00F512D2 /* BottleRecognitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD805F9A2D01F3BA00F512D2 /* BottleRecognitionManager.swift */; };
+		ADFA23A12D2C545E007F20E5 /* PaletteRecognitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFA23A02D2C545E007F20E5 /* PaletteRecognitionManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		AD805EF42D01D75600F512D2 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		AD805EF52D01D75600F512D2 /* SingleVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleVideoPlayer.swift; sourceTree = "<group>"; };
 		AD805F9A2D01F3BA00F512D2 /* BottleRecognitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleRecognitionManager.swift; sourceTree = "<group>"; };
+		ADFA23A02D2C545E007F20E5 /* PaletteRecognitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteRecognitionManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -106,6 +108,7 @@
 			children = (
 				ADA4A5192D2C076000AF1CF8 /* SugarPot */,
 				AD805F9A2D01F3BA00F512D2 /* BottleRecognitionManager.swift */,
+				ADFA23A02D2C545E007F20E5 /* PaletteRecognitionManager.swift */,
 				AD6579172D281B9300FE8A0E /* PanRecognitionManager.swift */,
 				AD805F962D01F30600F512D2 /* ImagePredictor 2 */,
 				AD805F2D2D01EB3700F512D2 /* Models */,
@@ -292,6 +295,7 @@
 				992BE96529B13AE9006157E3 /* PredictionViewModel.swift in Sources */,
 				992BE96029B13A2A006157E3 /* AVCaptureDeviceInput+Camera.swift in Sources */,
 				992BE94B29B138F6006157E3 /* ContentView.swift in Sources */,
+				ADFA23A12D2C545E007F20E5 /* PaletteRecognitionManager.swift in Sources */,
 				992BE97E29B13C32006157E3 /* HandActionModel+Singleton.swift in Sources */,
 				AD805EF72D01D75600F512D2 /* PlayerViewController.swift in Sources */,
 				AD805EF82D01D75600F512D2 /* SingleVideoPlayer.swift in Sources */,

@@ -30,6 +30,14 @@ class WebSocketClient: ObservableObject {
     @Published var step: Int = 0
     
     @Published var toggleCoucou: Bool = false
+    
+    @Published var toggleSugar: Bool = false
+    
+    @Published var toggleBougieVideo: Bool = false
+    
+    @Published var papel1Both: Bool = false
+    @Published var papel2Both: Bool = false
+
     @Published var videoName: String = "0_ACCUEIL"
     
     @Published var videoCorrect: Bool = false
@@ -110,10 +118,14 @@ extension WebSocketClient: WebSocketConnectionDelegate {
             self.sendMessage("pong", toRoute: "ipadRoberto")
         }
         
-        if string == "both" {
+        if string == "papel_1_both" {
             DispatchQueue.main.async {
-                self.step = 3
-                print("In step 3")
+                self.papel1Both = true
+            }
+        }
+        if string == "papel_2_both" {
+            DispatchQueue.main.async {
+                self.papel2Both = true
             }
         }
         if string == "next_step" {
@@ -147,9 +159,21 @@ extension WebSocketClient: WebSocketConnectionDelegate {
         }
         
         if string == "trigger_video_incorrect"{
-            print("--> video incorrect")
             DispatchQueue.main.async {
                 self.videoIncorrect = true
+            }
+        }
+        
+        if string == "trigger_sugar"{
+            DispatchQueue.main.async {
+                self.toggleSugar = true
+            }
+        }
+        
+        if string == "play_video_bougie"{
+            print("play video bougie received")
+            DispatchQueue.main.async {
+                self.toggleBougieVideo = true
             }
         }
         

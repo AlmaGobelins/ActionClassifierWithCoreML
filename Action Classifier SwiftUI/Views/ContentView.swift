@@ -2,7 +2,7 @@ import SwiftUI
 import Vision
 struct ContentView: View {
     //let spherosNames: [String] = ["SB-A729, SB-C7A8, SB-2020"]
-    let spherosNames: [String] = ["SB-A729"]
+    let spherosNames: [String] = ["SB-2020"]
     @State private var spheroIsConnected: Bool = false
     @ObservedObject var predictionVM = PredictionViewModel()
     @ObservedObject var wsClient = WebSocketClient.shared
@@ -17,8 +17,7 @@ struct ContentView: View {
     @StateObject private var videoControllerStep2Success = VideoPlayerController()
     @StateObject private var videoControllerStep2Failure = VideoPlayerController()
     @StateObject private var videoControllerStep3 = VideoPlayerController()
-    @StateObject private var videoControllerStep4Success = VideoPlayerController()
-    @StateObject private var videoControllerStep4Failure = VideoPlayerController()
+    @StateObject private var videoControllerStep4 = VideoPlayerController()
     @StateObject private var videoControllerStep5Success = VideoPlayerController()
     @StateObject private var videoControllerStep5Failure = VideoPlayerController()
     @StateObject private var videoControllerStep6Success = VideoPlayerController()
@@ -26,7 +25,8 @@ struct ContentView: View {
     
     @StateObject var bottleRecognitionManager = BottleRecognitionManager()
     @StateObject var panRecognitionManager = PanRecognitionManager()
-    
+    @StateObject var paletteRecognitionManager = PaletteRecognitionManager()
+
     @State private var videoIsPlaying: Bool = false
     @State private var showCaptureButton: Bool = false
     
@@ -211,6 +211,13 @@ struct ContentView: View {
                     }
                     .onAppear(){
                         wsClient.sendMessage("step_2_appeared", toRoute: "ipadRoberto")
+                        SharedToyBox.instance.searchForBoltsNamed(spherosNames) { err in
+                            if err == nil {
+                                print("Connected to sphero")
+                                self.spheroIsConnected.toggle()
+                                flipDetector.startMonitoring()
+                            }
+                        }
                     }
                     .onChange(of: self.toggleCoucou) { newValue in
                         if newValue {
@@ -252,16 +259,14 @@ struct ContentView: View {
                                     self.videoControllerStep3.play()
                                 }
                                  
-                                SharedToyBox.instance.searchForBoltsNamed(spherosNames) { err in
-                                    if err == nil {
-                                        print("Connected to sphero")
-                                        self.spheroIsConnected.toggle()
-                                        flipDetector.startMonitoring()
-                                    }
-                                }
                             }.onDisappear() {
                                 self.videoControllerStep3.onVideoEnd = nil
                             }
+                    }
+                    .onChange(of: wsClient.toggleSugar) { newValue in
+                        if newValue == true {
+                            self.videoControllerStep3.play()
+                        }
                     }
                     .onAppear(){
                         wsClient.sendMessage("step_3_appeared", toRoute: "ipadRoberto")
@@ -274,62 +279,90 @@ struct ContentView: View {
                 if wsClient.step == 4 {
                     ZStack {
                         Text("Next Step").foregroundColor(Color.blue).background(Color.white.opacity(0.7)).padding().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                        //Remplacer par video bougie
-                        //Envoyer depuis Esp un message Step 5
-                        if activeVideo == "2_O_PAN" {
-                            SingleVideoPlayer(videoName: "2_O_PAN", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep4Success)
-                                .onAppear {
-                                    self.videoControllerStep4Success.play()
-                                    self.videoControllerStep4Success.onVideoEnd = {
-                                        self.wsClient.step = 5
-                                    }
-                                }.onDisappear() {
-                                    self.videoControllerStep4Success.onVideoEnd = nil
+                        SingleVideoPlayer(videoName: "4_BOUGIE", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep4)
+                            .onAppear {
+                                self.videoControllerStep4.pause()
+                                self.videoControllerStep4.onVideoEnd = {
+                                    self.wsClient.step = 5
                                 }
-                            //Remplacer par vidéo bougie false
-                        } else if activeVideo == "2_N_PAN" {
-                            SingleVideoPlayer(videoName: "2_N_PAN", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep4Failure)
-                                .onAppear {
-                                    self.videoControllerStep4Failure.play()
-                                    self.videoControllerStep4Failure.onVideoEnd = {
-                                        self.wsClient.step = 4
-                                    }
-                                }.onDisappear() {
-                                    self.videoControllerStep4Failure.onVideoEnd = nil
+                                
+                                flipDetector.onFlipDetected = {
+                                    self.videoControllerStep4.play()
                                 }
+                                 
+                            }.onDisappear() {
+                                self.videoControllerStep4.onVideoEnd = nil
+                            }
+                    }
+                    .onChange(of: wsClient.toggleBougieVideo) { newValue in
+                        if newValue == true {
+                            self.videoControllerStep4.play()
                         }
                     }
                     .onAppear(){
                         wsClient.sendMessage("step_4_appeared", toRoute: "ipadRoberto")
                     }
                     .onTapGesture {
-                        self.wsClient.step = 5
+                        self.wsClient.step = 4
                     }
                 }
                 
                 if wsClient.step == 5 {
                     ZStack {
                         Text("Next Step").foregroundColor(Color.blue).background(Color.white.opacity(0.7)).padding().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                        if activeVideo == "5_O_PAPEL" {
+                        if activeVideo == "5_O_PAPEL" || wsClient.videoCorrect == true {
                             SingleVideoPlayer(videoName: "5_O_PAPEL", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep5Success)
+                                .id(videoPlayCount)
                                 .onAppear {
                                     self.videoControllerStep5Success.play()
                                     self.videoControllerStep5Success.onVideoEnd = {
-                                        self.wsClient.step = 6
+                                        DispatchQueue.main.async {
+                                            self.wsClient.step = 6
+                                        }
                                     }
                                 }.onDisappear() {
                                     self.videoControllerStep5Success.onVideoEnd = nil
+                                    resetVideoControllers()
+                                    self.wsClient.papel1Both = false
+                                    self.wsClient.papel2Both = false
                                 }
-                        } else if activeVideo == "5_N_PAPEL" {
+                        } else if activeVideo == "5_N_PAPEL" || wsClient.videoIncorrect == true {
                             SingleVideoPlayer(videoName: "5_N_PAPEL", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep5Failure)
+                                .id(videoPlayCount)
                                 .onAppear {
                                     self.videoControllerStep5Failure.play()
                                     self.videoControllerStep5Failure.onVideoEnd = {
-                                        self.wsClient.step = 5
+                                        DispatchQueue.main.async {
+                                            self.canRetry = true
+                                            self.wsClient.step = 5
+                                        }
                                     }
                                 }.onDisappear() {
                                     self.videoControllerStep5Failure.onVideoEnd = nil
+                                    resetVideoControllers()
+                                    self.wsClient.papel1Both = false
+                                    self.wsClient.papel2Both = false
                                 }
+                        }
+                    }
+                    .onChange(of: self.toggleCoucou) { newValue in
+                        print("New value: \(newValue)")
+                        if newValue {
+                            if canRetry {
+                                self.canRetry = false
+                                self.videoPlayCount += 1
+                                self.activeVideo = wsClient.papel1Both == true && wsClient.papel2Both == true ? "5_O_PAPEL" : "5_N_PAPEL"
+                                self.toggleCoucou = false
+                                print("papel1 : \(wsClient.papel1Both)")
+                                print("papel2 : \(wsClient.papel2Both)")
+
+                            } else if activeVideo == nil {
+                                // Premier essai
+                                self.activeVideo = wsClient.papel1Both == true && wsClient.papel2Both == true ? "5_O_PAPEL" : "5_N_PAPEL"
+                                self.toggleCoucou = false
+                                print("papel1 : \(wsClient.papel1Both)")
+                                print("papel2 : \(wsClient.papel2Both)")
+                            }
                         }
                     }
                     .onTapGesture {
@@ -343,49 +376,83 @@ struct ContentView: View {
                 if wsClient.step == 6 {
                     ZStack {
                         Text("Next Step").foregroundColor(Color.blue).background(Color.white.opacity(0.7)).padding().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                        if activeVideo == "6_O_OBJET" {
+                        if activeVideo == "6_O_OBJET" || wsClient.videoCorrect == true {
                             SingleVideoPlayer(videoName: "6_O_OBJET", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep6Success)
+                                .id(videoPlayCount)
                                 .onAppear {
                                     self.videoControllerStep6Success.play()
                                     self.videoControllerStep6Success.onVideoEnd = {
-                                        self.wsClient.step = 7
+                                        DispatchQueue.main.async {
+                                            self.wsClient.step = 7
+                                            wsClient.sendMessage("step_6_finished", toRoute: "ipadRoberto")
+                                        }
                                     }
                                 }.onDisappear() {
                                     self.videoControllerStep6Success.onVideoEnd = nil
+                                    resetVideoControllers()
                                 }
-                        } else if activeVideo == "6_N_OBJET" {
+                        } else if activeVideo == "6_N_OBJET" || wsClient.videoIncorrect == true {
                             SingleVideoPlayer(videoName: "6_N_OBJET", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep6Failure)
+                                .id(videoPlayCount)
                                 .onAppear {
                                     self.videoControllerStep6Failure.play()
                                     self.videoControllerStep6Failure.onVideoEnd = {
-                                        self.wsClient.step = 6
+                                        DispatchQueue.main.async {
+                                            self.canRetry = true
+                                            self.wsClient.step = 6
+                                        }
                                     }
                                 }.onDisappear() {
                                     self.videoControllerStep6Failure.onVideoEnd = nil
+                                    resetVideoControllers()
                                 }
                         }
                     }
                     .onAppear(){
                         wsClient.sendMessage("step_6_appeared", toRoute: "ipadRoberto")
                     }
-                    .onChange(of: predictionVM.predicted) { newValue in
-                        if newValue == "handwave" {
-                            panRecognitionManager.recognizeObjectsIn(image: predictionVM.currentFrame ?? UIImage())
-                            print("---> isPan : \(panRecognitionManager.isPan)")
-                            self.activeVideo = panRecognitionManager.isPan ? "6_O_OBJET" : "6_N_OBJET"
+                    .onChange(of: self.toggleCoucou) { newValue in
+                        print("New value: \(newValue)")
+                        if newValue {
+                            if canRetry {
+                                self.canRetry = false
+                                self.videoPlayCount += 1
+                                paletteRecognitionManager.recognizeObjectsIn(image: predictionVM.currentFrame ?? UIImage())
+                                print("---> isPalette: \(paletteRecognitionManager.isPalette)")
+                                self.activeVideo = paletteRecognitionManager.isPalette ? "6_O_OBJET" : "6_N_OBJET"
+                                self.toggleCoucou = false
+
+                            } else if activeVideo == nil {
+                                // Premier essai
+                                paletteRecognitionManager.recognizeObjectsIn(image: predictionVM.currentFrame ?? UIImage())
+                                self.activeVideo = paletteRecognitionManager.isPalette ? "6_O_OBJET" : "6_N_OBJET"
+                                self.toggleCoucou = false
+                            }
                         }
                     }
                     .onTapGesture {
                         self.wsClient.step = 7
                     }
                 }
+                if wsClient.step == 7 {
+                    ZStack {
+                        Text("Next Step").foregroundColor(Color.blue).background(Color.white.opacity(0.7)).padding().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    }
+                    .onAppear(){
+                        wsClient.sendMessage("step_6_appeared", toRoute: "ipadRoberto")
+                    }
+                    .onTapGesture {
+                        self.wsClient.step = 8
+                    }
+                }
+                
             }
         }
         .padding()
         .ignoresSafeArea()
         .onAppear {
             predictionVM.updateUILabels(with: .startingPrediction)
-            wsClient.connectTo(route: "ipadRoberto")
+            let _ = wsClient.connectTo(route: "ipadRoberto")
             wsClient.resetVideoPlayer = {
                 resetVideoControllers()
             }
@@ -410,9 +477,9 @@ struct ContentView: View {
             }
         }
         .onDisappear() {
-            wsClient.disconnect(route: "ipadRoberto")
             SharedToyBox.instance.stopSensors()
             flipDetector.stopMonitoring()
+            wsClient.disconnectFromAllRoutes()
         }
         .onReceive(
             NotificationCenter
@@ -429,8 +496,7 @@ struct ContentView: View {
         videoControllerStep2Success.pause()
         videoControllerStep2Failure.pause()
         videoControllerStep3.pause()
-        videoControllerStep4Success.pause()
-        videoControllerStep4Failure.pause()
+        videoControllerStep4.pause()
         videoControllerStep5Success.pause()
         videoControllerStep5Failure.pause()
         videoControllerStep6Success.pause()
@@ -438,6 +504,7 @@ struct ContentView: View {
         wsClient.videoCorrect = false
         wsClient.videoIncorrect = false
         activeVideo = nil
+        canRetry = false
     }
     
 }
