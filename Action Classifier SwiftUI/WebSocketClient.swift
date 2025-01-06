@@ -17,7 +17,8 @@ class WebSocketClient: ObservableObject {
     }
     
     static let shared:WebSocketClient = WebSocketClient()
-    
+    var resetVideoPlayer: (() -> Void)?
+
     var routes = [String:NWWebSocket]()
     // Macbook pro Mathieu
     var ipAdress: String = "192.168.0.166:8080"
@@ -27,6 +28,13 @@ class WebSocketClient: ObservableObject {
     //var ipAdress: String = "192.168.1.20:8080"
     @Published var receivedMessage: String = ""
     @Published var step: Int = 0
+    
+    @Published var toggleCoucou: Bool = false
+    @Published var videoName: String = "0_ACCUEIL"
+    
+    @Published var videoCorrect: Bool = false
+    @Published var videoIncorrect: Bool = false
+
     
     func connectTo(route:String) -> Bool {
         let socketURL = URL(string: "ws://\(ipAdress)/\(route)")
@@ -112,6 +120,36 @@ extension WebSocketClient: WebSocketConnectionDelegate {
             DispatchQueue.main.async {
                 self.step += 1
                 print("step \(self.step)")
+            }
+        }
+        
+        if string == "previous_step" {
+            DispatchQueue.main.async {
+                self.resetVideoPlayer?()
+                self.step -= 1
+                print("step \(self.step)")
+            }
+        }
+        
+        if string == "trigger_coucou" {
+            print("inside trigger coucou")
+            DispatchQueue.main.async {
+                self.toggleCoucou = true
+            }
+        }
+        
+        if string == "trigger_video_correct"{
+            print("--> video correct")
+            DispatchQueue.main.async {
+                self.videoCorrect = true
+            }
+            
+        }
+        
+        if string == "trigger_video_incorrect"{
+            print("--> video incorrect")
+            DispatchQueue.main.async {
+                self.videoIncorrect = true
             }
         }
         

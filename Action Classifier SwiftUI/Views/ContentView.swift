@@ -32,8 +32,9 @@ struct ContentView: View {
     
     @State private var videoPlayCount = 0
 
-
     @State private var displayVideo: Bool = false
+    @State private var toggleCoucou: Bool = false
+    
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -55,7 +56,9 @@ struct ContentView: View {
                 Spacer()
                 Text("Previous")
                     .onTapGesture {
-                        self.wsClient.step -= 1
+                        resetVideoControllers()
+                        self.activeVideo = nil
+                        self.wsClient.step = max(0, self.wsClient.step - 1)
                     }
                     .padding()
                     .foregroundColor(Color.red)
@@ -85,10 +88,11 @@ struct ContentView: View {
                         .onTapGesture {
                             self.wsClient.step = 1
                         }
-                        .onChange(of: predictionVM.predicted) { newValue in
-                            if newValue == "handwave" {
+                        .onChange(of: self.toggleCoucou) { newValue in
+                            if newValue {
                                 self.videoControllerStep0.play()
                                 wsClient.sendMessage("step_0_start", toRoute: "ipadRoberto")
+                                self.toggleCoucou = false
                             }
                         }
                 }
@@ -102,7 +106,7 @@ struct ContentView: View {
                             .padding()
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         
-                        if activeVideo == "1_O_BOISSON" {
+                        if activeVideo == "1_O_BOISSON" || wsClient.videoCorrect == true {
                             SingleVideoPlayer(
                                 videoName: "1_O_BOISSON",
                                 format: "mp4",
@@ -122,7 +126,7 @@ struct ContentView: View {
                             .onDisappear() {
                                 self.videoControllerStep1Success.onVideoEnd = nil
                             }
-                        } else if activeVideo == "1_N_BOISSON" {
+                        } else if activeVideo == "1_N_BOISSON" || wsClient.videoIncorrect == true {
                             SingleVideoPlayer(
                                 videoName: "1_N_BOISSON",
                                 format: "mp4",
@@ -134,28 +138,32 @@ struct ContentView: View {
                                 self.videoControllerStep1Failure.play()
                                 self.videoControllerStep1Failure.onVideoEnd = {
                                     DispatchQueue.main.async {
-                                        self.canRetry = true  // Active la possibilité de réessayer
+                                        self.canRetry = true
                                         print("video step 1 failure")
                                     }
                                 }
                             }
                             .onDisappear() {
                                 self.videoControllerStep1Failure.onVideoEnd = nil
+                                resetVideoControllers()
                             }
                         }
                     }
-                    .onChange(of: predictionVM.predicted) { newValue in
-                        if newValue == "handwave" {
+                    .onChange(of: self.toggleCoucou) { newValue in
+                        print("New value: \(newValue)")
+                        if newValue {
                             if canRetry {
                                 // Réinitialise l'état pour un nouveau test
                                 self.canRetry = false
                                 self.videoPlayCount += 1 // Incrémente le compteur pour forcer le rafraîchissement
                                 bottleRecognitionManager.recognizeObjectsIn(image: predictionVM.currentFrame ?? UIImage())
                                 self.activeVideo = bottleRecognitionManager.isBottle ? "1_O_BOISSON" : "1_N_BOISSON"
+                                self.toggleCoucou = false
                             } else if activeVideo == nil {
                                 // Premier essai
                                 bottleRecognitionManager.recognizeObjectsIn(image: predictionVM.currentFrame ?? UIImage())
                                 self.activeVideo = bottleRecognitionManager.isBottle ? "1_O_BOISSON" : "1_N_BOISSON"
+                                self.toggleCoucou = false
                             }
                         }
                     }
@@ -169,16 +177,19 @@ struct ContentView: View {
                         Text("Next Step").foregroundColor(Color.blue).background(Color.white.opacity(0.7)).padding().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         if activeVideo == "2_O_PAN" {
                             SingleVideoPlayer(videoName: "2_O_PAN", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep2Success)
+                                .id(videoPlayCount)
                                 .onAppear {
                                     self.videoControllerStep2Success.play()
                                     self.videoControllerStep2Success.onVideoEnd = {
                                         self.wsClient.step = 3
                                     }
+                                    self.activeVideo = nil
                                 }.onDisappear() {
                                     self.videoControllerStep2Success.onVideoEnd = nil
                                 }
                         } else if activeVideo == "2_N_PAN" {
                             SingleVideoPlayer(videoName: "2_N_PAN", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep2Failure)
+                                .id(videoPlayCount)
                                 .onAppear {
                                     self.videoControllerStep2Failure.play()
                                     self.videoControllerStep2Failure.onVideoEnd = {
@@ -190,13 +201,25 @@ struct ContentView: View {
                         }
                     }
                     .onAppear(){
-                        wsClient.sendMessage("step_3_appeared", toRoute: "ipadRoberto")
+                        wsClient.sendMessage("step_2_appeared", toRoute: "ipadRoberto")
                     }
-                    .onChange(of: predictionVM.predicted) { newValue in
-                        if newValue == "handwave" {
-                            panRecognitionManager.recognizeObjectsIn(image: predictionVM.currentFrame ?? UIImage())
-                            print("---> isPan : \(panRecognitionManager.isPan)")
-                            self.activeVideo = panRecognitionManager.isPan ? "2_O_PAN" : "2_N_PAN"
+                    .onChange(of: self.toggleCoucou) { newValue in
+                        if newValue {
+                            if canRetry {
+                                // Réinitialise l'état pour un nouveau test
+                                self.canRetry = false
+                                self.videoPlayCount += 1 // Incrémente le compteur pour forcer le rafraîchissement
+                                panRecognitionManager.recognizeObjectsIn(image: predictionVM.currentFrame ?? UIImage())
+                                print("---> isPan : \(panRecognitionManager.isPan)")
+                                self.activeVideo = panRecognitionManager.isPan ? "2_O_PAN" : "2_N_PAN"
+                                self.toggleCoucou = false
+                            } else if activeVideo == nil {
+                                // Premier essai
+                                panRecognitionManager.recognizeObjectsIn(image: predictionVM.currentFrame ?? UIImage())
+                                print("---> isPan : \(panRecognitionManager.isPan)")
+                                self.activeVideo = panRecognitionManager.isPan ? "2_O_PAN" : "2_N_PAN"
+                                self.toggleCoucou = false
+                            }
                         }
                     }
                     .onTapGesture {
@@ -355,6 +378,32 @@ struct ContentView: View {
         .onAppear {
             predictionVM.updateUILabels(with: .startingPrediction)
             wsClient.connectTo(route: "ipadRoberto")
+            wsClient.resetVideoPlayer = {
+               resetVideoControllers()
+           }
+
+        }
+        .onChange(of: predictionVM.predicted) { newValue in
+            if newValue == "handwave" {
+                self.toggleCoucou = true
+                wsClient.toggleCoucou = false
+            } else {
+                self.toggleCoucou = false
+                wsClient.toggleCoucou = false
+            }
+        }
+        .onChange(of: wsClient.toggleCoucou) { newValue in
+            print("---> toggleCoucou : \(newValue)")
+            if newValue == true {
+                self.toggleCoucou = true
+                wsClient.toggleCoucou = false
+            } else {
+                self.toggleCoucou = false
+                wsClient.toggleCoucou = false
+            }
+        }
+        .onDisappear() {
+            wsClient.disconnect(route: "ipadRoberto")
         }
         .onReceive(
             NotificationCenter
@@ -363,6 +412,25 @@ struct ContentView: View {
                     predictionVM.videoCapture.updateDeviceOrientation()
                 }
     }
+    
+    func resetVideoControllers() {
+        videoControllerStep0.pause()
+        videoControllerStep1Success.pause()
+        videoControllerStep1Failure.pause()
+        videoControllerStep2Success.pause()
+        videoControllerStep2Failure.pause()
+        videoControllerStep3Success.pause()
+        videoControllerStep3Failure.pause()
+        videoControllerStep4Success.pause()
+        videoControllerStep4Failure.pause()
+        videoControllerStep5Success.pause()
+        videoControllerStep5Failure.pause()
+        videoControllerStep6Success.pause()
+        videoControllerStep6Failure.pause()
+        wsClient.videoCorrect = false
+        wsClient.videoIncorrect = false
+    }
+
 }
 
 struct ContentView_Previews: PreviewProvider {
