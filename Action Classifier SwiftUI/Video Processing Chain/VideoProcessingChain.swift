@@ -300,7 +300,7 @@ extension VideoProcessingChain {
     /// - Parameter actionPrediction: The action classifier's prediction.
     /// - Tag: checkConfidence
     private func checkConfidence(_ actionPrediction: ActionPrediction) -> ActionPrediction {
-        let minimumConfidence = 0.6
+        let minimumConfidence = 0.9
 
         let lowConfidence = actionPrediction.confidence < minimumConfidence
         return lowConfidence ? .lowConfidencePrediction : actionPrediction

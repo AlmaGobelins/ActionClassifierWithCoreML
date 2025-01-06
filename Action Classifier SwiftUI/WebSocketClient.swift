@@ -19,8 +19,12 @@ class WebSocketClient: ObservableObject {
     static let shared:WebSocketClient = WebSocketClient()
     
     var routes = [String:NWWebSocket]()
+    // Macbook pro Mathieu
+    var ipAdress: String = "192.168.0.166:8080"
+    // Macbook pro Killian
     //var ipAdress: String = "192.168.0.132:8080"
-    var ipAdress: String = "192.168.1.20:8080"
+    // Chez Killian
+    //var ipAdress: String = "192.168.1.20:8080"
     @Published var receivedMessage: String = ""
     @Published var step: Int = 0
     
@@ -104,6 +108,13 @@ extension WebSocketClient: WebSocketConnectionDelegate {
                 print("In step 3")
             }
         }
+        if string == "next_step" {
+            DispatchQueue.main.async {
+                self.step += 1
+                print("step \(self.step)")
+            }
+        }
+        
     }
     
     func webSocketDidReceiveMessage(connection: WebSocketConnection, data: Data) {

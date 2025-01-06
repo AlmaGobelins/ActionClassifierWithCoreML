@@ -32,9 +32,15 @@ class VideoPlayerController: ObservableObject {
         playerViewController?.pauseVideo()
     }
     
+    func updateVideo(_ videoName: String) {
+        playerViewController?.updateVideoSource(videoName: videoName, format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+    }
+    
     @objc private func videoDidFinishPlaying(notification: Notification) {
-        // Call the onVideoEnd closure when the video ends
-        onVideoEnd?()
+        // Utilisation de DispatchQueue pour mettre à jour le step après la fin de la vidéo
+        DispatchQueue.main.async {
+            self.onVideoEnd?()
+        }
     }
 }
 
