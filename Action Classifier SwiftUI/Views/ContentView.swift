@@ -1,19 +1,22 @@
 import SwiftUI
 import Vision
 struct ContentView: View {
+    //let spherosNames: [String] = ["SB-A729, SB-C7A8, SB-2020"]
     let spherosNames: [String] = ["SB-A729"]
     @State private var spheroIsConnected: Bool = false
     @ObservedObject var predictionVM = PredictionViewModel()
     @ObservedObject var wsClient = WebSocketClient.shared
     @State var connectedToServer: Bool = false
     
+    private let flipDetector = FlipDetector(toyBox: SharedToyBox.instance)
+    
+    
     @StateObject private var videoControllerStep0 = VideoPlayerController()
     @StateObject private var videoControllerStep1Success = VideoPlayerController()
     @StateObject private var videoControllerStep1Failure = VideoPlayerController()
     @StateObject private var videoControllerStep2Success = VideoPlayerController()
     @StateObject private var videoControllerStep2Failure = VideoPlayerController()
-    @StateObject private var videoControllerStep3Success = VideoPlayerController()
-    @StateObject private var videoControllerStep3Failure = VideoPlayerController()
+    @StateObject private var videoControllerStep3 = VideoPlayerController()
     @StateObject private var videoControllerStep4Success = VideoPlayerController()
     @StateObject private var videoControllerStep4Failure = VideoPlayerController()
     @StateObject private var videoControllerStep5Success = VideoPlayerController()
@@ -31,7 +34,7 @@ struct ContentView: View {
     @State private var canRetry = false
     
     @State private var videoPlayCount = 0
-
+    
     @State private var displayVideo: Bool = false
     @State private var toggleCoucou: Bool = false
     
@@ -67,7 +70,7 @@ struct ContentView: View {
                     .padding([.top, .trailing], 16)
                 
             }
-        
+            
             ZStack() {
                 // Step 0: Vidéo d'accueil
                 if wsClient.step == 0 {
@@ -125,6 +128,7 @@ struct ContentView: View {
                             }
                             .onDisappear() {
                                 self.videoControllerStep1Success.onVideoEnd = nil
+                                resetVideoControllers()
                             }
                         } else if activeVideo == "1_N_BOISSON" || wsClient.videoIncorrect == true {
                             SingleVideoPlayer(
@@ -133,7 +137,7 @@ struct ContentView: View {
                                 frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height),
                                 controller: videoControllerStep1Failure
                             )
-                            .id(videoPlayCount) // Force le rafraîchissement
+                            .id(videoPlayCount)
                             .onAppear {
                                 self.videoControllerStep1Failure.play()
                                 self.videoControllerStep1Failure.onVideoEnd = {
@@ -153,7 +157,6 @@ struct ContentView: View {
                         print("New value: \(newValue)")
                         if newValue {
                             if canRetry {
-                                // Réinitialise l'état pour un nouveau test
                                 self.canRetry = false
                                 self.videoPlayCount += 1 // Incrémente le compteur pour forcer le rafraîchissement
                                 bottleRecognitionManager.recognizeObjectsIn(image: predictionVM.currentFrame ?? UIImage())
@@ -181,11 +184,13 @@ struct ContentView: View {
                                 .onAppear {
                                     self.videoControllerStep2Success.play()
                                     self.videoControllerStep2Success.onVideoEnd = {
-                                        self.wsClient.step = 3
+                                        DispatchQueue.main.async {
+                                            self.wsClient.step = 3
+                                        }
                                     }
-                                    self.activeVideo = nil
                                 }.onDisappear() {
                                     self.videoControllerStep2Success.onVideoEnd = nil
+                                    resetVideoControllers()
                                 }
                         } else if activeVideo == "2_N_PAN" {
                             SingleVideoPlayer(videoName: "2_N_PAN", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep2Failure)
@@ -193,10 +198,14 @@ struct ContentView: View {
                                 .onAppear {
                                     self.videoControllerStep2Failure.play()
                                     self.videoControllerStep2Failure.onVideoEnd = {
-                                        self.wsClient.step = 2
+                                        DispatchQueue.main.async {
+                                            self.canRetry = true
+                                            self.wsClient.step = 2
+                                        }
                                     }
                                 }.onDisappear() {
                                     self.videoControllerStep2Failure.onVideoEnd = nil
+                                    resetVideoControllers()
                                 }
                         }
                     }
@@ -231,29 +240,28 @@ struct ContentView: View {
                     ZStack {
                         Text("Next Step").foregroundColor(Color.blue).background(Color.white.opacity(0.7)).padding().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         //Remplacer par video sucre
-                      //Envoyer depuis Esp un message Step 3
-                        if activeVideo == "2_O_PAN" {
-                            SingleVideoPlayer(videoName: "2_O_PAN", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep3Success)
-                                .onAppear {
-                                    self.videoControllerStep3Success.play()
-                                    self.videoControllerStep3Success.onVideoEnd = {
-                                        self.wsClient.step = 4
-                                    }
-                                }.onDisappear() {
-                                    self.videoControllerStep3Success.onVideoEnd = nil
+                        //Envoyer depuis Esp un message Step 3
+                        SingleVideoPlayer(videoName: "3_SUGAR", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep3)
+                            .onAppear {
+                                self.videoControllerStep3.pause()
+                                self.videoControllerStep3.onVideoEnd = {
+                                    self.wsClient.step = 4
                                 }
-                        //Remplacer par vidéo sucre false
-                        } else if activeVideo == "2_N_PAN" {
-                            SingleVideoPlayer(videoName: "2_N_PAN", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep3Failure)
-                                .onAppear {
-                                    self.videoControllerStep3Failure.play()
-                                    self.videoControllerStep3Failure.onVideoEnd = {
-                                        self.wsClient.step = 3
-                                    }
-                                }.onDisappear() {
-                                    self.videoControllerStep3Failure.onVideoEnd = nil
+                                
+                                flipDetector.onFlipDetected = {
+                                    self.videoControllerStep3.play()
                                 }
-                        }
+                                 
+                                SharedToyBox.instance.searchForBoltsNamed(spherosNames) { err in
+                                    if err == nil {
+                                        print("Connected to sphero")
+                                        self.spheroIsConnected.toggle()
+                                        flipDetector.startMonitoring()
+                                    }
+                                }
+                            }.onDisappear() {
+                                self.videoControllerStep3.onVideoEnd = nil
+                            }
                     }
                     .onAppear(){
                         wsClient.sendMessage("step_3_appeared", toRoute: "ipadRoberto")
@@ -267,7 +275,7 @@ struct ContentView: View {
                     ZStack {
                         Text("Next Step").foregroundColor(Color.blue).background(Color.white.opacity(0.7)).padding().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         //Remplacer par video bougie
-                         //Envoyer depuis Esp un message Step 5
+                        //Envoyer depuis Esp un message Step 5
                         if activeVideo == "2_O_PAN" {
                             SingleVideoPlayer(videoName: "2_O_PAN", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep4Success)
                                 .onAppear {
@@ -278,7 +286,7 @@ struct ContentView: View {
                                 }.onDisappear() {
                                     self.videoControllerStep4Success.onVideoEnd = nil
                                 }
-                        //Remplacer par vidéo bougie false
+                            //Remplacer par vidéo bougie false
                         } else if activeVideo == "2_N_PAN" {
                             SingleVideoPlayer(videoName: "2_N_PAN", format: "mp4", frameSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), controller: videoControllerStep4Failure)
                                 .onAppear {
@@ -379,9 +387,8 @@ struct ContentView: View {
             predictionVM.updateUILabels(with: .startingPrediction)
             wsClient.connectTo(route: "ipadRoberto")
             wsClient.resetVideoPlayer = {
-               resetVideoControllers()
-           }
-
+                resetVideoControllers()
+            }
         }
         .onChange(of: predictionVM.predicted) { newValue in
             if newValue == "handwave" {
@@ -404,6 +411,8 @@ struct ContentView: View {
         }
         .onDisappear() {
             wsClient.disconnect(route: "ipadRoberto")
+            SharedToyBox.instance.stopSensors()
+            flipDetector.stopMonitoring()
         }
         .onReceive(
             NotificationCenter
@@ -419,8 +428,7 @@ struct ContentView: View {
         videoControllerStep1Failure.pause()
         videoControllerStep2Success.pause()
         videoControllerStep2Failure.pause()
-        videoControllerStep3Success.pause()
-        videoControllerStep3Failure.pause()
+        videoControllerStep3.pause()
         videoControllerStep4Success.pause()
         videoControllerStep4Failure.pause()
         videoControllerStep5Success.pause()
@@ -429,8 +437,9 @@ struct ContentView: View {
         videoControllerStep6Failure.pause()
         wsClient.videoCorrect = false
         wsClient.videoIncorrect = false
+        activeVideo = nil
     }
-
+    
 }
 
 struct ContentView_Previews: PreviewProvider {

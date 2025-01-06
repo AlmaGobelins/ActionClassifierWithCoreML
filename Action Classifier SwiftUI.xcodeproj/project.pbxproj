@@ -70,6 +70,7 @@
 		AD805F2A2D01EB2B00F512D2 /* Extensions */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Extensions; sourceTree = "<group>"; };
 		AD805F2D2D01EB3700F512D2 /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
 		AD805F962D01F30600F512D2 /* ImagePredictor 2 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "ImagePredictor 2"; sourceTree = "<group>"; };
+		ADA4A5192D2C076000AF1CF8 /* SugarPot */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SugarPot; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +104,7 @@
 		992BE94729B138F6006157E3 /* Action Classifier SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				ADA4A5192D2C076000AF1CF8 /* SugarPot */,
 				AD805F9A2D01F3BA00F512D2 /* BottleRecognitionManager.swift */,
 				AD6579172D281B9300FE8A0E /* PanRecognitionManager.swift */,
 				AD805F962D01F30600F512D2 /* ImagePredictor 2 */,
@@ -222,6 +224,7 @@
 				AD805F2A2D01EB2B00F512D2 /* Extensions */,
 				AD805F2D2D01EB3700F512D2 /* Models */,
 				AD805F962D01F30600F512D2 /* ImagePredictor 2 */,
+				ADA4A5192D2C076000AF1CF8 /* SugarPot */,
 			);
 			name = "Action Classifier SwiftUI";
 			productName = "Action Classifier SwiftUI";
